@@ -10,7 +10,11 @@ Paddle::Paddle(const Vec2 & pos_in, float halfWidth_in, float halfHeight_in)
 
 void Paddle::Draw(Graphics & gfx)
 {
-	gfx.DrawRect(GetRect(), color);
+	RectF rect = GetRect();
+	gfx.DrawRect(rect, wingColor);
+	rect.left += wingWidth;
+	rect.right -= wingWidth;
+	gfx.DrawRect(rect, color);
 }
 
 void Paddle::DoWallCollision(const RectF & walls)
@@ -28,7 +32,7 @@ void Paddle::DoWallCollision(const RectF & walls)
 
 bool Paddle::DoBallCollision(Ball & ball) const
 {
-	if (GetRect().IsOverlappingWith(ball.GetRect()))
+	if (ball.GetVelocity().y > 0.0f && GetRect().IsOverlappingWith(ball.GetRect()))
 	{
 		ball.ReboundY();
 		return true;
