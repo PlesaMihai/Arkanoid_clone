@@ -55,7 +55,7 @@ private:
 	Paddle paddle;
 
 	static constexpr int brickRows = 4;
-	static constexpr int brickCols = 12;
+	static constexpr int brickCols = 18;
 	static constexpr int nBrickMax = brickRows * brickCols;
 	static constexpr float brickWidth = 40.0f;
 	static constexpr float brickHeight = 22.0f;

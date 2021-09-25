@@ -33,11 +33,13 @@ Game::Game(MainWindow& wnd)
 {
 	int i = 0;
 	Color colorArray[] = {Colors::Red, Colors::Blue, Colors::Green, Colors::Magenta};
+
+	const Vec2 topLeft(40.0f, 40.0f);
 	for (int y = 0; y < brickRows; y++)
 	{
 		for (int x = 0; x < brickCols; x++)
 		{
-			bricks[i] = Brick(RectF(Vec2(x * brickWidth, y * brickHeight), brickWidth, brickHeight), colorArray[y]);
+			bricks[i] = Brick(RectF(topLeft + Vec2(x * brickWidth, y * brickHeight), brickWidth, brickHeight), colorArray[y]);
 			i++;
 		}
 	}
