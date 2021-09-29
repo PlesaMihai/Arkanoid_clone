@@ -30,11 +30,24 @@ void Paddle::DoWallCollision(const RectF & walls)
 	}
 }
 
-bool Paddle::DoBallCollision(Ball & ball) const
+bool Paddle::DoBallCollision(Ball & ball)
 {
-	if (ball.GetVelocity().y > 0.0f && GetRect().IsOverlappingWith(ball.GetRect()))
+	if (GetRect().IsOverlappingWith(ball.GetRect()) && !ballColided)
 	{
-		ball.ReboundY();
+		Vec2 ballPos = ball.GetPosition();
+		const RectF rect = GetRect();
+		if ((std::signbit(ball.GetVelocity().x) == std::signbit((ballPos - pos).x)))
+		{
+			ball.ReboundY();
+		}
+		else if (ballPos.x >= rect.left && ballPos.x <= rect.right)
+		{
+			ball.ReboundY();
+		}
+		else {
+			ball.ReboundX();
+		}
+		ballColided = true;
 		return true;
 	}
 	return false;
@@ -55,4 +68,9 @@ void Paddle::Update(Keyboard & kbd, float dt)
 RectF Paddle::GetRect() const
 {
 	return RectF::FromCenter(pos, halfWidth, halfHeight);
+}
+
+void Paddle::ResedBallColided()
+{
+	ballColided = false;
 }
