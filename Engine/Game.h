@@ -54,6 +54,8 @@ private:
 	Sound brckSound;
 	Paddle paddle;
 
+	bool gameOver = false;
+
 	static constexpr int brickRows = 4;
 	static constexpr int brickCols = 18;
 	static constexpr int nBrickMax = brickRows * brickCols;

@@ -62,51 +62,61 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-	ball.Update(dt);
-	paddle.Update(wnd.kbd, dt);
-	paddle.DoWallCollision(walls);
+	if (!gameOver)
+	{
+		ball.Update(dt);
+		paddle.Update(wnd.kbd, dt);
+		paddle.DoWallCollision(walls);
 
-	float lowestLength = 0;
-	int colIndex = 0;
-	float current;
-	for (int i = 0; i < nBrickMax; i++)
-	{	
-		if (bricks[i].CheckCollision(ball))
+		float lowestLength = 0;
+		int colIndex = 0;
+		float current;
+		for (int i = 0; i < nBrickMax; i++)
 		{
-			current = (ball.GetPosition() - bricks[i].GetPostion()).GetLengthSq();
-			if (lowestLength == 0 || current < lowestLength)
+			if (bricks[i].CheckCollision(ball))
 			{
-				lowestLength = current;
-				colIndex = i;
+				current = (ball.GetPosition() - bricks[i].GetPostion()).GetLengthSq();
+				if (lowestLength == 0 || current < lowestLength)
+				{
+					lowestLength = current;
+					colIndex = i;
+				}
 			}
 		}
-	}
 
-	if (lowestLength != 0)
-	{
-		bricks[colIndex].DoCollision(ball);
-		brckSound.Play();
-		paddle.ResedBallColided();
-	}
+		if (lowestLength != 0)
+		{
+			bricks[colIndex].DoCollision(ball);
+			brckSound.Play();
+			paddle.ResedBallColided();
+		}
 
-	if (ball.DoWallCollision(walls))
-	{
-		soundPad.Play();
-		paddle.ResedBallColided();
+		const int ballWallColResult = ball.DoWallCollision(walls);
+
+		if (ballWallColResult == 1)
+		{
+			soundPad.Play();
+			paddle.ResedBallColided();
+		}
+		else if(ballWallColResult == 2){
+			gameOver = true;
+		}
+		if (paddle.DoBallCollision(ball))
+		{
+			soundPad.Play();
+		}
 	}
-	if (paddle.DoBallCollision(ball))
-	{
-		soundPad.Play();
-	}
-	
 }
 
 void Game::ComposeFrame()
 {
-	ball.Draw(gfx);
+	if (!gameOver)
+	{
+		ball.Draw(gfx);
+		paddle.Draw(gfx);
+	}
 	for (const Brick& b : bricks)
 	{
 		b.Draw(gfx);
 	}
-	paddle.Draw(gfx);
 }
